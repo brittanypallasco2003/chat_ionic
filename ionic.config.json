@@ -1,0 +1,7 @@
+{
+  "name": "chatbot_ionic",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
