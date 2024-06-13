@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>Chat with Friends Online</ion-title>
+    <ion-title>Whatssapp Esfot</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -10,7 +10,7 @@
   <form [formGroup]="credentialForm">
     <ion-item>
       <ion-input
-        placeholder="Email address"
+        placeholder="Correo electrónico"
         formControlName="email"
         autofocus="true"
         clearInput="true"
@@ -25,7 +25,7 @@
 
     <ion-item>
       <ion-input
-        placeholder="Password"
+        placeholder="Contraseña"
         type="password"
         formControlName="password"
         clearInput="true"
@@ -41,5 +41,6 @@
 
   <ion-button (click)="signUp()" expand="full">Regístrate</ion-button>
   <ion-button (click)="signIn()" expand="full" color="secondary">Iniciar Sesión</ion-button>
+  <ion-button (click)="signInWithGoogle()" expand="full" color="tertiary">Iniciar Sesión con Google</ion-button>
 
 </ion-content>

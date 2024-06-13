@@ -23,58 +23,75 @@ export class LoginPage implements OnInit {
   ngOnInit() {
     this.credentialForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
 
   async signUp() {
     const loading = await this.loadingController.create();
     await loading.present();
-    this.chatService
-      .signup(this.credentialForm.value)
-      .then(
-        (user) => {
-          loading.dismiss();
-          this.router.navigateByUrl('/chat', { replaceUrl: true });
-        },
-        async (err) => {
-          loading.dismiss();
-          const alert = await this.alertController.create({
-            header: 'Sign up failed',
-            message: err.message,
-            buttons: ['OK'],
-          });
+    this.chatService.signup(this.credentialForm.value).then(
+      (user) => {
+        loading.dismiss();
+        this.router.navigateByUrl('/chat', { replaceUrl: true });
+      },
+      async (err) => {
+        loading.dismiss();
+        const alert = await this.alertController.create({
+          header: 'Error',
+          message: err.message,
+          buttons: ['OK'],
+        });
 
-          await alert.present();
-        }
-      );
+        await alert.present();
+      }
+    );
   }
 
   async signIn() {
     const loading = await this.loadingController.create();
     await loading.present();
 
-    this.chatService
-      .signIn(this.credentialForm.value)
-      .then(
-        (res) => {
-          loading.dismiss();
-          this.router.navigateByUrl('/chat', { replaceUrl: true });
-        },
-        async (err) => {
-          loading.dismiss();
-          const alert = await this.alertController.create({
-            header: ':(',
-            message: err.message,
-            buttons: ['OK'],
-          });
+    this.chatService.signIn(this.credentialForm.value).then(
+      (res) => {
+        loading.dismiss();
+        this.router.navigateByUrl('/chat', { replaceUrl: true });
+      },
+      async (err) => {
+        loading.dismiss();
+        const alert = await this.alertController.create({
+          header: ':(',
+          message: err.message,
+          buttons: ['OK'],
+        });
 
-          await alert.present();
-        }
-      );
+        await alert.present();
+      }
+    );
   }
 
-  // Easy access for form fields
+  async signInWithGoogle() {
+    const loading = await this.loadingController.create();
+    await loading.present();
+
+    this.chatService.logInWithGoogleProvider().then(
+      () => {
+        loading.dismiss();
+        this.router.navigateByUrl('/chat', { replaceUrl: true });
+      },
+      async (err) => {
+        loading.dismiss();
+        const alert = await this.alertController.create({
+          header: ':(',
+          message: err.message,
+          buttons: ['OK'],
+        });
+
+        await alert.present();
+      }
+    );
+  }
+
   get email() {
     return this.credentialForm.get('email');
   }
