@@ -6,6 +6,7 @@
 
 <ion-content class="ion-padding">
 
+  <ion-img src="../../../assets/loginImg.png" class="background"/>
   <form [formGroup]="credentialForm">
     <ion-item>
       <ion-input
@@ -15,10 +16,10 @@
         clearInput="true"
       ></ion-input>
     </ion-item>
-    <div *ngIf="email?.dirty || email?.touched">
+    <div *ngIf="email?.dirty || email?.touched" class="contValidacionEmail">
       <div *ngIf="email?.errors" class="errors">
-        <span *ngIf="email?.errors?.['required']">Este campo es obligatorio</span>
-        <span *ngIf="email?.errors?.['email']">Formato de correo inválido</span>
+        <ion-text *ngIf="email?.errors?.['required']" color="danger">Este campo es obligatorio</ion-text>
+        <ion-text *ngIf="email?.errors?.['email']" color="danger">Formato de correo inválido</ion-text>
       </div>
     </div>
 
@@ -30,10 +31,10 @@
         clearInput="true"
       ></ion-input>
     </ion-item>
-    <div *ngIf="password?.dirty || password?.touched">
+    <div *ngIf="password?.dirty || password?.touched" class="contValidacionPass">
       <div *ngIf="password?.errors" class="errors">
-        <span *ngIf="password?.errors?.['required']">Este campo es obligatorio</span>
-        <span *ngIf="password?.errors?.['minlength']">Tu contraseña debe tener por lo menos 6 carácteres</span>
+        <ion-text *ngIf="password?.errors?.['required']" color="danger">Este campo es obligatorio</ion-text>
+        <ion-text *ngIf="password?.errors?.['minlength']" color="danger">Tu contraseña debe tener por lo menos 6 carácteres</ion-text>
       </div>
     </div>
   </form>
