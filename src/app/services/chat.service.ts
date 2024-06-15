@@ -20,10 +20,12 @@ export interface Message {
   createdAt: FieldValue;
   id: string;
   from: string;
-  msg: string;
+  msg?: string; // Mensaje de texto opcional
+  imageUrl?: string; // URL de la imagen opcional
   fromName: string;
   myMsg: boolean;
 }
+
 
 @Injectable({
   providedIn: 'root',
@@ -31,7 +33,7 @@ export interface Message {
 export class ChatService {
   currentUser: User | null = null;
 
-  constructor(private afAuth: AngularFireAuth, private afs: AngularFirestore) {
+  constructor(private afAuth: AngularFireAuth, private afs: AngularFirestore, private storage: AngularFireStorage) {
     this.afAuth.onAuthStateChanged((user) => {
       if (user) {
         this.currentUser = { uid: user.uid, email: user.email };
@@ -41,17 +43,8 @@ export class ChatService {
     });
   }
 
-  async signup({
-    email,
-    password,
-  }: {
-    email: string;
-    password: string;
-  }): Promise<any> {
-    const credential = await this.afAuth.createUserWithEmailAndPassword(
-      email,
-      password
-    );
+  async signup({ email, password }: { email: string; password: string; }): Promise<any> {
+    const credential = await this.afAuth.createUserWithEmailAndPassword(email, password);
 
     if (credential.user) {
       const uid = credential.user.uid;
@@ -65,14 +58,13 @@ export class ChatService {
     }
   }
 
-  signIn({ email, password }: { email: string; password: string }) {
+  signIn({ email, password }: { email: string; password: string; }) {
     return this.afAuth.signInWithEmailAndPassword(email, password);
   }
 
   signOut(): Promise<void> {
     return this.afAuth.signOut();
   }
-
 
   async logInWithGoogleProvider(): Promise<void> {
     try {
@@ -82,12 +74,9 @@ export class ChatService {
         const uid = result.user.uid;
         const email = result.user.email;
 
-        // Check if user exists in Firestore
         const userDoc = await this.afs.doc(`users/${uid}`).get().toPromise();
 
-        // Check if userDoc is defined and handle the case when it doesn't exist
         if (userDoc && !userDoc.exists) {
-          // If user does not exist, create a new record
           await this.afs.doc(`users/${uid}`).set({
             uid,
             email,
@@ -98,28 +87,57 @@ export class ChatService {
       alert(error);
     }
   }
-  
-  
 
-  addChatMessage(msg: string) {
-    if (this.currentUser && this.currentUser.uid) {
-      return this.afs.collection('messages').add({
-        msg: msg,
-        from: this.currentUser.uid,
-        createdAt: serverTimestamp(),
-      });
-    } else {
+  async addChatMessage(content: string, file?: File) {
+    if (!this.currentUser || !this.currentUser.uid) {
       throw new Error('No user is currently signed in');
     }
+    if (!file) {
+      // Si no hay archivo, guardamos solo el contenido de texto
+      await this.afs.collection('messages').add({
+        msg: content,
+        from: this.currentUser.uid,
+        createdAt: serverTimestamp(),
+        fromName: '', // Puedes asignar el nombre del usuario aquí si es necesario
+        myMsg: true,
+      });
+      return;
+    }
+  
+    // Si hay un archivo, lo subimos a Firebase Storage
+    const filePath = `chat_files/${Date.now()}_${file.name}`;
+    console.log(filePath)
+    const fileRef = this.storage.ref(filePath);
+    const task = this.storage.upload(filePath, file);
+    // Esperamos a que el archivo se suba completamente
+    await task.then(async (snapshot) => {
+      const fileUrl = await snapshot.ref.getDownloadURL();
+      if (!this.currentUser || !this.currentUser.uid) {
+        throw new Error('No user is currently signed in');
+      }
+      // Guardamos el mensaje en Firestore
+      await this.afs.collection('messages').add({
+        from: this.currentUser.uid,
+        createdAt: serverTimestamp(),
+        fileUrl: fileUrl,
+        fileName: file.name,
+        fileType: file.type,
+        fromName: '', // Puedes asignar el nombre del usuario aquí si es necesario
+        myMsg: true,
+      });
+    });
   }
+  
+  
 
-  getChatMessages() {
-    let users: any[] = [];
+  
+
+  getChatMessages(): Observable<Message[]> {
+    let users: User[] = [];
     return this.getUsers().pipe(
       switchMap((res) => {
         users = res;
-        return this.afs
-          .collection('messages', (ref) => ref.orderBy('createdAt'))
+        return this.afs.collection('messages', (ref) => ref.orderBy('createdAt'))
           .valueChanges({ idField: 'id' }) as Observable<Message[]>;
       }),
       map((messages) => {
@@ -134,10 +152,8 @@ export class ChatService {
     );
   }
 
-  private getUsers() {
-    return this.afs
-      .collection('users')
-      .valueChanges({ idField: 'uid' }) as Observable<User[]>;
+  private getUsers(): Observable<User[]> {
+    return this.afs.collection('users').valueChanges({ idField: 'uid' }) as Observable<User[]>;
   }
 
   private getUserForMsg(msgFromId: string, users: User[]): string {

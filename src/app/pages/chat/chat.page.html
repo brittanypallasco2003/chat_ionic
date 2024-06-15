@@ -36,12 +36,7 @@
         <ion-button color="primary" [disabled]="newMsg === ''" class="msg-btn" (click)="sendMessage()">
           <ion-icon name="send" slot="icon-only"></ion-icon>
         </ion-button>
-        <ion-button  color="primary" >
-          <ion-icon name="image-outline" slot="icon-only"></ion-icon>
-        </ion-button>
-        <ion-button  color="primary" >
-          <ion-icon name="attach-outline" slot="icon-only"></ion-icon>
-        </ion-button>
+        <input type="file" (change)="onFileSelected($event)" accept="image/*">
       </ion-col>
     </ion-row>
   </ion-toolbar>

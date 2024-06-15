@@ -14,6 +14,7 @@ export class ChatPage implements OnInit {
 
   messages!: Observable<any[]>;
   newMsg = '';
+  selectedImage: File | null = null;
 
   constructor(private chatService: ChatService, private router: Router) { }
 
@@ -22,16 +23,41 @@ export class ChatPage implements OnInit {
   }
 
   sendMessage() {
-    this.chatService.addChatMessage(this.newMsg).then(() => {
-      this.newMsg = '';
-      this.content.scrollToBottom();
-    });
+    if (this.newMsg.trim() !== '' || this.selectedImage) {
+      try {
+        // Si hay una imagen seleccionada, envíala junto con el mensaje
+        if (this.selectedImage) {
+          this.chatService.addChatMessage(this.newMsg, this.selectedImage).then(() => {
+            this.newMsg = '';
+            this.selectedImage = null;
+            this.content.scrollToBottom();
+          }).catch(error => {
+            console.error('Error sending message with image:', error);
+          });
+        } else {
+          // Si no hay imagen, envía solo el mensaje de texto
+          this.chatService.addChatMessage(this.newMsg).then(() => {
+            this.newMsg = '';
+            this.content.scrollToBottom();
+          }).catch(error => {
+            console.error('Error sending message:', error);
+          });
+        }
+      } catch (error) {
+        console.error('Error sending message:', error);
+      }
+    }
   }
 
   signOut() {
     this.chatService.signOut().then(() => {
       this.router.navigateByUrl('/', { replaceUrl: true });
+    }).catch(error => {
+      console.error('Error signing out:', error);
     });
   }
 
+  onFileSelected(event: any) {
+    this.selectedImage = event.target.files[0] as File;
+  }
 }
