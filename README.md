@@ -78,7 +78,7 @@ firebaseConfig: {
 ## Firbase
 |Storage|
 |-|
-|![image](https://github.com/brittanypallasco2003/chat_ionic/assets/117743650/a7881af9-4d6d-41a2-a8c2-e94edee67019)|
+|![image](https://github.com/brittanypallasco2003/chat_ionic/assets/117743650/d4e6c991-e090-4bd3-8afe-c15db64f4931)|
 
 |Authentication|
 |-|
