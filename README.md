@@ -7,6 +7,8 @@ Envía fotos y pdf a tus amigos 🥳
 
 #### Web: [Página web Chat Esfot](https://chat-f4e72.web.app/)
 
+#### Video del funcionamiento: 
+
 ## Autores
 
 - Brittany Espinel - [@brittanypallasco2003](https://github.com/brittanypallasco2003)
@@ -57,7 +59,7 @@ Construye con Android Studio
   ionic capacitor build android
 ```
 
-## 🍃 Variables de Entorno
+## Variables de Entorno ⚙️
 
 Para ejecutar este proyecto necesitaras dirijirte a archivo .env y colocar tus variables de entorno de la siguiente manera:
 
