@@ -7,7 +7,7 @@ Envía fotos y pdf a tus amigos 🥳
 
 #### Web: [Página web Chat Esfot](https://chat-f4e72.web.app/)
 
-#### Video del funcionamiento: 
+#### Video del funcionamiento: [Chat Ionic - Funcionamiento](https://youtu.be/VChBe8QhDBU) 
 
 ## Autores
 
