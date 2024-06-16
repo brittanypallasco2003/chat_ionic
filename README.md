@@ -43,7 +43,7 @@ Construye con la splash screen
 
 |Extensión VSCode: instala la extensión de Ionic, ve a Configuration, Splash Screen & Icon y reconstruye|
 |-|
-||
+|![image](https://github.com/brittanypallasco2003/chat_ionic/assets/117743650/c2dbd60c-4be4-48be-9de9-8426c34d59e7)|
 
 o usa el comando:
 
