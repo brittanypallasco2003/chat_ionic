@@ -3,7 +3,7 @@
 Aplicación móvil de chat.
 Envía fotos y pdf a tus amigos 🥳
 
-#### APK: Descarga el [.apk](src/assets/app-debug.apk)
+#### APK: Descarga la [.apk](src/assets/app-debug.apk)
 
 #### Web: [Página web Chat Esfot](https://chat-f4e72.web.app/)
 
