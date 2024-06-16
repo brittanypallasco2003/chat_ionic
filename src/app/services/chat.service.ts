@@ -20,12 +20,12 @@ export interface Message {
   createdAt: FieldValue;
   id: string;
   from: string;
-  msg?: string; // Mensaje de texto opcional
-  imageUrl?: string; // URL de la imagen opcional
+  msg?: string;
+  imageUrl?: string;
+  pdfUrl?: string;
   fromName: string;
   myMsg: boolean;
 }
-
 
 @Injectable({
   providedIn: 'root',
@@ -33,7 +33,11 @@ export interface Message {
 export class ChatService {
   currentUser: User | null = null;
 
-  constructor(private afAuth: AngularFireAuth, private afs: AngularFirestore, private storage: AngularFireStorage) {
+  constructor(
+    private afAuth: AngularFireAuth,
+    private afs: AngularFirestore,
+    private storage: AngularFireStorage
+  ) {
     this.afAuth.onAuthStateChanged((user) => {
       if (user) {
         this.currentUser = { uid: user.uid, email: user.email };
@@ -89,48 +93,37 @@ export class ChatService {
   }
 
   async addChatMessage(content: string, file?: File) {
-    if (!this.currentUser || !this.currentUser.uid) {
+    if (!this.currentUser) {
       throw new Error('No user is currently signed in');
     }
-    if (!file) {
-      // Si no hay archivo, guardamos solo el contenido de texto
+
+    if (file) {
+      const filePath = `chat_files/${Date.now()}_${file.name}`;
+      const fileRef = this.storage.ref(filePath);
+      const task = this.storage.upload(filePath, file);
+
+      await task.then(async (snapshot) => {
+        const fileUrl = await snapshot.ref.getDownloadURL();
+        const isPdf = file.type === 'application/pdf';
+
+        await this.afs.collection('messages').add({
+          from: this.currentUser!.uid,
+          createdAt: serverTimestamp(),
+          fromName: this.currentUser!.email || '',
+          myMsg: true,
+          ...(isPdf ? { pdfUrl: fileUrl } : { imageUrl: fileUrl }),
+        });
+      });
+    } else {
       await this.afs.collection('messages').add({
         msg: content,
-        from: this.currentUser.uid,
+        from: this.currentUser!.uid,
         createdAt: serverTimestamp(),
-        fromName: '', // Puedes asignar el nombre del usuario aquí si es necesario
+        fromName: this.currentUser!.email || '',
         myMsg: true,
       });
-      return;
     }
-  
-    // Si hay un archivo, lo subimos a Firebase Storage
-    const filePath = `chat_files/${Date.now()}_${file.name}`;
-    console.log(filePath)
-    const fileRef = this.storage.ref(filePath);
-    const task = this.storage.upload(filePath, file);
-    // Esperamos a que el archivo se suba completamente
-    await task.then(async (snapshot) => {
-      const fileUrl = await snapshot.ref.getDownloadURL();
-      if (!this.currentUser || !this.currentUser.uid) {
-        throw new Error('No user is currently signed in');
-      }
-      // Guardamos el mensaje en Firestore
-      await this.afs.collection('messages').add({
-        from: this.currentUser.uid,
-        createdAt: serverTimestamp(),
-        fileUrl: fileUrl,
-        fileName: file.name,
-        fileType: file.type,
-        fromName: '', // Puedes asignar el nombre del usuario aquí si es necesario
-        myMsg: true,
-      });
-    });
   }
-  
-  
-
-  
 
   getChatMessages(): Observable<Message[]> {
     let users: User[] = [];
