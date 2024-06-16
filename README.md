@@ -61,7 +61,7 @@ Construye con Android Studio
 
 ## Variables de Entorno ⚙️
 
-Para ejecutar este proyecto necesitaras dirijirte a archivo environment.ts y colocar tus variables de entorno de la siguiente manera:
+Para ejecutar este proyecto necesitaras dirijirte a archivo **environment.ts** y colocar tus variables de entorno de la siguiente manera:
 
 ```js
 firebaseConfig: {
