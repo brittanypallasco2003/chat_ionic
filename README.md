@@ -82,7 +82,7 @@ firebaseConfig: {
 
 |Storage|
 |-|
-|![image](https://github.com/brittanypallasco2003/chat_ionic/assets/117743650/b6c46ec0-8a24-4fa5-9d98-09f9a6d5c552)|
+|![image](https://github.com/brittanypallasco2003/chat_ionic/assets/117743650/3640d5b4-390c-437d-a0f7-83fb680e07b7)|
 
 |Cloud Firestore|
 |-|
