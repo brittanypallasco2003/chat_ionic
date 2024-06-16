@@ -29,7 +29,7 @@ export class ChatPage implements OnInit {
   async sendMessage() {
     if (this.newMsg.trim() !== '' || this.selectedFile) {
       const loading = await this.loadingController.create({
-        message: 'Enviando mensaje...',
+        message: 'Enviando mensaje...📨',
       });
       await loading.present();
 
@@ -43,7 +43,7 @@ export class ChatPage implements OnInit {
         this.selectedFile = null;
         await this.scrollToBottom();
       } catch (error) {
-        console.error('Error sending message:', error);
+        console.error('Error enviando el mensaje:', error);
       } finally {
         loading.dismiss();
       }
@@ -54,7 +54,7 @@ export class ChatPage implements OnInit {
     this.chatService.signOut().then(() => {
       this.router.navigateByUrl('/', { replaceUrl: true });
     }).catch(error => {
-      console.error('Error signing out:', error);
+      console.error('Error al cerrar sesión:', error);
     });
   }
 
@@ -62,14 +62,14 @@ export class ChatPage implements OnInit {
     const file = event.target.files[0] as File;
     if (file) {
       const loading = await this.loadingController.create({
-        message: 'Cargando archivo...',
+        message: 'Cargando archivo...📩',
       });
       await loading.present();
 
       try {
         this.selectedFile = file;
       } catch (error) {
-        console.error('Error loading file:', error);
+        console.error('Error al cargar el archivo:', error);
       } finally {
         loading.dismiss();
       }
@@ -80,7 +80,7 @@ export class ChatPage implements OnInit {
     try {
       await this.content.scrollToBottom(300);
     } catch (error) {
-      console.error('Error scrolling to bottom:', error);
+      console.error('Error con el scroll bottom:', error);
     }
   }
 }

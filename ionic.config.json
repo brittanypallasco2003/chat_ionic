@@ -1,5 +1,5 @@
 {
-  "name": "chatbot_ionic",
+  "name": "chat_ionic",
   "integrations": {
     "capacitor": {}
   },

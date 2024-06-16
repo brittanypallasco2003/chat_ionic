@@ -22,7 +22,7 @@ export interface Message {
   from: string;
   msg?: string;
   imageUrl?: string;
-  pdfUrl?: { url: string; name: string }; // Changed to include both URL and name
+  pdfUrl?: { url: string; name: string };
   fromName: string;
   myMsg: boolean;
 }

@@ -2,7 +2,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'io.ionic.starter',
-  appName: 'chatbot_ionic',
+  appName: 'chat_ionic',
   webDir: 'www',
   plugins: {
     SplashScreen: {

@@ -60,7 +60,7 @@ export class LoginPage implements OnInit {
       async (err) => {
         loading.dismiss();
         const alert = await this.alertController.create({
-          header: ':(',
+          header: 'Error',
           message: err.message,
           buttons: ['OK'],
         });
@@ -82,7 +82,7 @@ export class LoginPage implements OnInit {
       async (err) => {
         loading.dismiss();
         const alert = await this.alertController.create({
-          header: ':(',
+          header: 'Error',
           message: err.message,
           buttons: ['OK'],
         });
