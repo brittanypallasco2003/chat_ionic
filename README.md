@@ -3,7 +3,7 @@
 Aplicación móvil de chat.
 Envía fotos y pdf a tus amigos 🥳
 
-#### APK: Descarga el [.apk](photo-gallery/src/assets/app-debug.apk)
+#### APK: Descarga el [.apk](src/assets/app-debug.apk)
 
 #### Web: [Página web Chat Esfot](https://chat-f4e72.web.app/)
 
@@ -45,7 +45,7 @@ Construye con la splash screen
 
 |Extensión VSCode: instala la extensión de Ionic, ve a Configuration, Splash Screen & Icon y reconstruye|
 |-|
-||
+|![image](https://github.com/brittanypallasco2003/chat_ionic/assets/117743650/d21ea3fd-cfc7-49be-8d7b-7c862b435173)|
 
 o usa el comando:
 
@@ -74,4 +74,12 @@ firebaseConfig: {
     measurementId: ""
   },
 ```
+
+## Firbase
+
+### Storage
+
+### Firestore
+### Authentication
+
 
