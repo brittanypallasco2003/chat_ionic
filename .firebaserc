@@ -1,5 +1,9 @@
 {
   "projects": {
-    "default": "chatbot-ionic-5c561"
-  }
+    "default": "chat-f4e72",
+    "chat": "chat-f4e72"
+  },
+  "targets": {},
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
 }
