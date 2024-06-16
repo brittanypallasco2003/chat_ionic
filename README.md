@@ -76,10 +76,16 @@ firebaseConfig: {
 ```
 
 ## Firbase
+|Storage|
+|-|
+|![image](https://github.com/brittanypallasco2003/chat_ionic/assets/117743650/a7881af9-4d6d-41a2-a8c2-e94edee67019)|
 
-### Storage
+|Authentication|
+|-|
+|![image](https://github.com/brittanypallasco2003/chat_ionic/assets/117743650/5c26f1ec-9e7a-4cc3-b1a7-c11951f0a5e4)|
 
-### Firestore
-### Authentication
+|Cloud Firestore|
+|-|
+|![image](https://github.com/brittanypallasco2003/chat_ionic/assets/117743650/ea6e48ed-46d4-4213-be29-a5f1f2e7875c)|
 
 
