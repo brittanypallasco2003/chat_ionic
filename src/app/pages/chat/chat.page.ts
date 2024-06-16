@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IonContent } from '@ionic/angular';
+import { IonContent, LoadingController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { ChatService } from '../../services/chat.service';
 import { Router } from '@angular/router';
@@ -16,33 +16,36 @@ export class ChatPage implements OnInit {
   newMsg = '';
   selectedFile: File | null = null;
 
-  constructor(private chatService: ChatService, private router: Router) { }
+  constructor(
+    private chatService: ChatService,
+    private router: Router,
+    private loadingController: LoadingController
+  ) {}
 
   ngOnInit() {
     this.messages = this.chatService.getChatMessages();
   }
 
-  sendMessage() {
+  async sendMessage() {
     if (this.newMsg.trim() !== '' || this.selectedFile) {
+      const loading = await this.loadingController.create({
+        message: 'Enviando mensaje...',
+      });
+      await loading.present();
+
       try {
         if (this.selectedFile) {
-          this.chatService.addChatMessage(this.newMsg, this.selectedFile).then(() => {
-            this.newMsg = '';
-            this.selectedFile = null;
-            this.content.scrollToBottom();
-          }).catch(error => {
-            console.error('Error al enviar el mensaje con el archivo:', error);
-          });
+          await this.chatService.addChatMessage(this.newMsg, this.selectedFile);
         } else {
-          this.chatService.addChatMessage(this.newMsg).then(() => {
-            this.newMsg = '';
-            this.content.scrollToBottom();
-          }).catch(error => {
-            console.error('Error al enviar mensaje:', error);
-          });
+          await this.chatService.addChatMessage(this.newMsg);
         }
+        this.newMsg = '';
+        this.selectedFile = null;
+        await this.scrollToBottom();
       } catch (error) {
-        console.error('Error al enviar mensaje:', error);
+        console.error('Error sending message:', error);
+      } finally {
+        loading.dismiss();
       }
     }
   }
@@ -51,11 +54,33 @@ export class ChatPage implements OnInit {
     this.chatService.signOut().then(() => {
       this.router.navigateByUrl('/', { replaceUrl: true });
     }).catch(error => {
-      console.error('Error al cerrar sesión:', error);
+      console.error('Error signing out:', error);
     });
   }
 
-  onFileSelected(event: any) {
-    this.selectedFile = event.target.files[0] as File;
+  async onFileSelected(event: any) {
+    const file = event.target.files[0] as File;
+    if (file) {
+      const loading = await this.loadingController.create({
+        message: 'Cargando archivo...',
+      });
+      await loading.present();
+
+      try {
+        this.selectedFile = file;
+      } catch (error) {
+        console.error('Error loading file:', error);
+      } finally {
+        loading.dismiss();
+      }
+    }
+  }
+
+  private async scrollToBottom() {
+    try {
+      await this.content.scrollToBottom(300);
+    } catch (error) {
+      console.error('Error scrolling to bottom:', error);
+    }
   }
 }

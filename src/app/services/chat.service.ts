@@ -22,7 +22,7 @@ export interface Message {
   from: string;
   msg?: string;
   imageUrl?: string;
-  pdfUrl?: string;
+  pdfUrl?: { url: string; name: string }; // Changed to include both URL and name
   fromName: string;
   myMsg: boolean;
 }
@@ -33,11 +33,7 @@ export interface Message {
 export class ChatService {
   currentUser: User | null = null;
 
-  constructor(
-    private afAuth: AngularFireAuth,
-    private afs: AngularFirestore,
-    private storage: AngularFireStorage
-  ) {
+  constructor(private afAuth: AngularFireAuth, private afs: AngularFirestore, private storage: AngularFireStorage) {
     this.afAuth.onAuthStateChanged((user) => {
       if (user) {
         this.currentUser = { uid: user.uid, email: user.email };
@@ -96,34 +92,40 @@ export class ChatService {
     if (!this.currentUser) {
       throw new Error('No user is currently signed in');
     }
-
+  
+    let fileUrl = '';
+    let fileField = '';
+  
     if (file) {
       const filePath = `chat_files/${Date.now()}_${file.name}`;
       const fileRef = this.storage.ref(filePath);
       const task = this.storage.upload(filePath, file);
-
+  
       await task.then(async (snapshot) => {
-        const fileUrl = await snapshot.ref.getDownloadURL();
-        const isPdf = file.type === 'application/pdf';
-
-        await this.afs.collection('messages').add({
-          from: this.currentUser!.uid,
-          createdAt: serverTimestamp(),
-          fromName: this.currentUser!.email || '',
-          myMsg: true,
-          ...(isPdf ? { pdfUrl: fileUrl } : { imageUrl: fileUrl }),
-        });
-      });
-    } else {
-      await this.afs.collection('messages').add({
-        msg: content,
-        from: this.currentUser!.uid,
-        createdAt: serverTimestamp(),
-        fromName: this.currentUser!.email || '',
-        myMsg: true,
+        fileUrl = await snapshot.ref.getDownloadURL();
+        fileField = file.type.startsWith('image/') ? 'imageUrl' : 'pdfUrl';
       });
     }
+  
+    const messageData: any = {
+      msg: content,
+      from: this.currentUser!.uid,
+      createdAt: serverTimestamp(),
+      fromName: this.currentUser!.email || '',
+      myMsg: true,
+    };
+  
+    if (fileUrl) {
+      if (fileField === 'pdfUrl') {
+        messageData.pdfUrl = { url: fileUrl, name: file ? file.name : '' };
+      } else {
+        messageData[fileField] = fileUrl;
+      }
+    }
+  
+    await this.afs.collection('messages').add(messageData);
   }
+  
 
   getChatMessages(): Observable<Message[]> {
     let users: User[] = [];
@@ -136,9 +138,7 @@ export class ChatService {
       map((messages) => {
         for (let m of messages) {
           m.fromName = this.getUserForMsg(m.from, users);
-          if (this.currentUser && this.currentUser.uid) {
-            m.myMsg = this.currentUser.uid === m.from;
-          }
+          m.myMsg = this.currentUser ? this.currentUser.uid === m.from : false;
         }
         return messages;
       })
@@ -151,10 +151,10 @@ export class ChatService {
 
   private getUserForMsg(msgFromId: string, users: User[]): string {
     for (let usr of users) {
-      if (usr.uid == msgFromId) {
-        return usr.email ? usr.email : 'User';
+      if (usr.uid === msgFromId) {
+        return usr.email!;
       }
     }
-    return 'User';
+    return 'Deleted';
   }
 }
