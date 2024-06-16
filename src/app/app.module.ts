@@ -24,15 +24,7 @@ import { HttpClientModule } from '@angular/common/http';
     BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,
-    AngularFireModule.initializeApp({
-      apiKey: 'AIzaSyCZquDoStDQn3FoS0onRshn4EizxspW6Xk',
-      authDomain: 'chat-f4e72.firebaseapp.com',
-      projectId: 'chat-f4e72',
-      storageBucket: 'chat-f4e72.appspot.com',
-      messagingSenderId: '862288524497',
-      appId: '1:862288524497:web:4393a248bf72dc7588c1f0',
-      measurementId: 'G-Q9PSFLF64Q',
-    }),
+    AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
     AngularFireStorageModule,
     ReactiveFormsModule,
@@ -41,15 +33,7 @@ import { HttpClientModule } from '@angular/common/http';
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideFirebaseApp(() =>
-      initializeApp({
-        apiKey: 'AIzaSyCZquDoStDQn3FoS0onRshn4EizxspW6Xk',
-        authDomain: 'chat-f4e72.firebaseapp.com',
-        projectId: 'chat-f4e72',
-        storageBucket: 'chat-f4e72.appspot.com',
-        messagingSenderId: '862288524497',
-        appId: '1:862288524497:web:4393a248bf72dc7588c1f0',
-        measurementId: 'G-Q9PSFLF64Q',
-      })
+      initializeApp(environment.firebaseConfig)
     ),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
