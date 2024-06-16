@@ -7,7 +7,7 @@ Envía fotos y pdf a tus amigos 🥳
 
 #### Web: [Página web Chat Esfot](https://chat-f4e72.web.app/)
 
-#### Video del funcionamiento: 
+#### Video del funcionamiento: [Chat Ionic - Funcionamiento](https://youtu.be/VChBe8QhDBU) 
 
 ## Autores
 
@@ -76,10 +76,16 @@ firebaseConfig: {
 ```
 
 ## Firbase
+|Authentication|
+|-|
+|![image](https://github.com/brittanypallasco2003/chat_ionic/assets/117743650/d4e6c991-e090-4bd3-8afe-c15db64f4931)|
 
-### Storage
+|Storage|
+|-|
+|![image](https://github.com/brittanypallasco2003/chat_ionic/assets/117743650/3640d5b4-390c-437d-a0f7-83fb680e07b7)|
 
-### Firestore
-### Authentication
+|Cloud Firestore|
+|-|
+|![image](https://github.com/brittanypallasco2003/chat_ionic/assets/117743650/ea6e48ed-46d4-4213-be29-a5f1f2e7875c)|
 
 
