@@ -1,4 +1,4 @@
-# Chat Ionic (Chat Esfot)
+# Chat Ionic (Chat Esfot) 📨
 
 Aplicación móvil de chat.
 Envía fotos y pdf a tus amigos 🥳
@@ -57,5 +57,19 @@ Construye con Android Studio
   ionic capacitor build android
 ```
 
-## Capturas de funcionamiento
+## 🍃 Variables de Entorno
+
+Para ejecutar este proyecto necesitaras dirijirte a archivo .env y colocar tus variables de entorno de la siguiente manera:
+
+```js
+firebaseConfig: {
+    apiKey: "",
+    authDomain: "",
+    projectId: "",
+    storageBucket: "",
+    messagingSenderId: "",
+    appId: "",
+    measurementId: ""
+  },
+```
 
